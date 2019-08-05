@@ -1,0 +1,9 @@
+---
+- name: Rebuild initrd
+  command: "{{ crypttab_initrd_command }}"
+  listen: crypttab changed
+
+- name: Reexec systemd
+  systemd:
+    daemon_reexec: True
+  listen: crypttab changed
