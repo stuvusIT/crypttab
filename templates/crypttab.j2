@@ -1,0 +1,5 @@
+# {{ ansible_managed }}
+
+{% for name,config in crypttab_devices.items() %}
+{{ name }}	{{ config.device }}	{{ config.password | default(crypttab_default_password) }}	{{ config.options | default(crypttab_default_options) | join(",") }}
+{% endfor %}

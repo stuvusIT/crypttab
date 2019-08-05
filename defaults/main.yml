@@ -1,0 +1,6 @@
+---
+crypttab_devices: {}
+crypttab_default_password: "none"
+crypttab_default_options:
+  - luks
+crypttab_initrd_command: "update-initramfs -uk all"
