@@ -4,3 +4,5 @@ crypttab_default_password: "none"
 crypttab_default_options:
   - luks
 crypttab_initrd_command: "update-initramfs -uk all"
+cryptsetup_backup_headers: True
+cryptsetup_header_backup_dir: /boot/luks-headers
