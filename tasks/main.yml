@@ -7,3 +7,23 @@
     owner: root
     group: root
   notify: crypttab changed
+
+- block:
+  # This is needed, because cryptsetup will not override existing header backups
+  - name: Create temp directory to backup LUKS header
+    tempfile:
+      state: directory
+      suffix: luks-header
+    register: tempdir
+
+  - name: Save LUKS headers
+    command: "cryptsetup luksHeaderBackup {{ item.value.device }} --header-backup-file={{ tempdir.path }}/{{ item.key }}-{{ item.value.device | basename }}.header.bak"
+    loop: "{{ crypttab_devices | dict2items }}"
+
+  - name: Copy saved headers to target directory
+    copy:
+      src: "{{ tempdir.path }}/"
+      dest: "{{ cryptsetup_header_backup_dir }}"
+      remote_src: True
+  # condition for block
+  when: cryptsetup_backup_headers

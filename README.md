@@ -1,6 +1,6 @@
 # Role Name
 
-This roles writes `/etc/crypttab` and rebuilds the initrd after changes.
+This roles writes `/etc/crypttab`, saves the respective LUKS headers and rebuilds the initrd after changes.
 
 
 ## Requirements
@@ -10,12 +10,14 @@ This role has been tested on Debian 10, but should work on any distribution that
 ## Role Variables
 
 
-| Name                        | Required/Default           | Description                                                                         |
-|-----------------------------|:--------------------------:|-------------------------------------------------------------------------------------|
-| `crypttab_devices`          | `{}`                       | Dictionary to specify crypto devices to unlock, see below.                          |
-| `crypttab_default_password` | `none`                     | Value to write into the `password` column if none is specified for a crypto device. |
-| `crypttab_default_options`  | `['luks']`                 | Default list of options to specify in the last column                               |
-| `crypttab_initrd_command`   | `update-initramfs -uk all` | Command that is executed after crypttab changes to rebuild the initrd               |
+| Name                         | Required/Default           | Description                                                                                   |
+|------------------------------|:--------------------------:|-----------------------------------------------------------------------------------------------|
+| `crypttab_devices`           | `{}`                       | Dictionary to specify crypto devices to unlock, see below.                                    |
+| `crypttab_default_password`  | `none`                     | Value to write into the `password` column if none is specified for a crypto device.           |
+| `crypttab_default_options`   | `['luks']`                 | Default list of options to specify in the last column                                         |
+| `crypttab_initrd_command`    | `update-initramfs -uk all` | Command that is executed after crypttab changes to rebuild the initrd                         |
+| `crypttab_backup_headers`    | `True`                     | Whether to backup the LUKS headers to the directory specified in `crypttab_header_backup_dir` |
+| `crypttab_header_backup_dir` | `/boot/luks-headers`       | Directory to backup LUKS headers to if `crypttab_backup_headers` is set                       |
 
 ### Crypttab devices
 
@@ -38,6 +40,7 @@ crypttab_devices:
     options:
       - luks
       - discard
+crypttab_header_backup_dir: /mnt/backup/luks-headers
 ```
 
 ## License
